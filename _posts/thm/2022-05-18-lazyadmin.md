@@ -235,7 +235,7 @@ image:
     <img src="/assets/img/images/thm/LazyAdmin/Untitled 6.png" alt="Untitled" data-size="original">
 
     <img src="/assets/img/images/thm/LazyAdmin/Untitled 7.png" alt="Untitled" data-size="original">
-*   we can see there is ads section and there is ads directory in /content/inc (remember from [here](../LazyAdmin/images.md)), so let’s create an ad with our php reverse shell
+*   we can see there is ads section and there is ads directory in /content/inc, so let’s create an ad with our php reverse shell
 
     <img src="/assets/img/images/thm/LazyAdmin/Untitled 8.png" alt="Untitled" data-size="original">
 * now we can run the code by navigating to http:///content/inc/ad/juba.php
