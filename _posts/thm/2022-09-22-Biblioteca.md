@@ -11,6 +11,18 @@ image:
   alt: Bibioteca logo
 ---
 
+
+## Info
+
+| Name         | Biblioteca                                                                                |
+| ------------ | ----------------------------------------------------------------------------------------- |
+| Room link    | [https://tryhackme.com/room/biblioteca](https://tryhackme.com/room/biblioteca)            |
+| Difficulty   | Medium                                                                                    |
+| Created by   | [hadrian3689](https://tryhackme.com/p/hadrian3689)                                         |
+| solving date | Sep 22th 2022                                                                           |
+| ----         |                                                                                           |
+
+
 # Enumeration
 - first let’s assign a variable with the machine IP
     
