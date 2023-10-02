@@ -359,7 +359,7 @@ If the server stores its verification keys in a database, the `kid` header par
 - Often used to retrieve a key from:
     - file system
     - database
-- we talked about [**Injecting self-signed JWTs via the `kid` parameter**](/assets/images/JWT-attacks.md) above, let's talk about signing JWT with a known secret using SQLi
+- we talked about [**Injecting self-signed JWTs via the `kid` parameter**](#injecting-self-signed-jwts-via-the-kid-parameter) above, let's talk about signing JWT with a known secret using SQLi
 - suppose the following header
     
     ```json
