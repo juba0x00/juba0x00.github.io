@@ -240,7 +240,7 @@ x5c attribute in JWK is just a certificate with the following format:
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout attacker.key -out attacker.crt
 ```
 
-add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](/assets/images/JWT-attacks.md), we can sign using the private key and send the token with **`x5u`** header points to our jwk
+add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](#→-injecting-self-signed-token-via-x5c-header), we can sign using the private key and send the token with **`x5u`** header points to our jwk
 
 ### → **Injecting self-signed JWTs via the `jku` parameter**
 
