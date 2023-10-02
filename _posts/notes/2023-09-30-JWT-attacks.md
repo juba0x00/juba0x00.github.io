@@ -58,9 +58,9 @@ the signature section validates that the user hasn’t tampered with the token. 
 
 The JWT specification is actually very limited. It only defines a format for representing information ("claims") as a JSON object that can be transferred between two parties. In practice, JWTs aren't really used as a standalone entity. The JWT spec is extended by both the JSON Web Signature (JWS) and JSON Web Encryption (JWE) specifications, which define concrete ways of actually implementing JWTs.
 
-![Untitled](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/Untitled.png)
+![Untitled](/assets/images/JWT-attacks/Untitled.png)
 
-![Untitled](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/Untitled%201.png)
+![Untitled](/assets/images/JWT-attacks/Untitled%201.png)
 
 - JWE provides **Confidentiality**
 - JWS provides **Integrity**
@@ -131,7 +131,7 @@ When implementing JWT applications, **developers sometimes make mistakes like fo
 
 Download: 
 
-[jwt.secrets.list](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/jwt.secrets.list)
+[jwt.secrets.list](/assets/images/JWT-attacks/jwt.secrets.list)
 
 If an attacker is not able to brute-force the key, they might try leaking the secret key instead. If another vulnerability, like a directory traversal, external entity attack (XXE), or SSRF exists that allows the attacker to read the file where the key value is stored, the attacker can steal the key and sign arbitrary tokens of their choosing.
 
@@ -240,7 +240,7 @@ x5c attribute in JWK is just a certificate with the following format:
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout attacker.key -out attacker.crt
 ```
 
-add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d.md), we can sign using the private key and send the token with **`x5u`** header points to our jwk
+add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](/assets/images/JWT-attacks.md), we can sign using the private key and send the token with **`x5u`** header points to our jwk
 
 ### → **Injecting self-signed JWTs via the `jku` parameter**
 
@@ -303,11 +303,11 @@ we can use HTTP response splitting vulnerability to bypass `jku` restrictions, l
 http://vulnerable.com/.well-known/../debug?value=any_value%0d%0aContent-Length: **LENGTH**%0d%0a%0d%0a**RESPONSE**
 ```
 
-![Untitled](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/Untitled%202.png)
+![Untitled](/assets/images/JWT-attacks/Untitled%202.png)
 
 - as shown above, we can add our JWK instead, like the following
 
-![Untitled](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/Untitled%203.png)
+![Untitled](/assets/images/JWT-attacks/Untitled%203.png)
 
 we can use this vulnerable endpoint in `jku` to return our JWK and the server verifies using it
 
@@ -350,7 +350,7 @@ If the server stores its verification keys in a database, the `kid` header par
     - `Kernel.open` or `open`
 - `Kernel.open/open` will run the filename as a command if the filename starts with a pipe | like the following `| echo "Command Injection" > /tmp/PoC.txt`
     
-    ![Screenshot_20230928_124511.png](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d/Screenshot_20230928_124511.png)
+    ![Screenshot_20230928_124511.png](/assets/images/JWT-attacks/Screenshot_20230928_124511.png)
     
 - **Since the signature is checked after the vulnerability is exploited, you don't need to provide a valid signature in this exercise.**
 
@@ -359,7 +359,7 @@ If the server stores its verification keys in a database, the `kid` header par
 - Often used to retrieve a key from:
     - file system
     - database
-- we talked about [→ **Injecting self-signed JWTs via the `kid` parameter**](JWT%20attacks%204f62b2b641a84032bc624f8e8432345d.md) above, let's talk about signing JWT with a known secret using SQLi
+- we talked about [→ **Injecting self-signed JWTs via the `kid` parameter**](/assets/images/JWT-attacks.md) above, let's talk about signing JWT with a known secret using SQLi
 - suppose the following header
     
     ```json
