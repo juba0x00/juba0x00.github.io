@@ -10,7 +10,7 @@ tags: [jwt, jwt-attacks, authentication, authorization]
 toc: true
 ---
 
-# [go to attacks, Skip Introduction](#-accepting-arbitrary-signatures-does-not-verify-the-signature)
+# [go to attacks, Skip Introduction](#accepting-arbitrary-signatures-does-not-verify-the-signature)
 
 - **Sources, Credits:**
     - [PortSwigger](https://portswigger.net/web-security/jwt)
@@ -91,7 +91,7 @@ These implementation flaws usually mean that the signature of the JWT is not ver
 
 # Attacks
 
-## **Accepting arbitrary signatures (Does not verify the signature)**
+## Accepting arbitrary signatures (Does not verify the signature)
 
 JWT libraries typically provide one method for verifying tokens and another that just decodes them. For example, the Node.js library `jsonwebtoken` has `verify()` and `decode()`.
 
@@ -240,7 +240,7 @@ x5c attribute in JWK is just a certificate with the following format:
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout attacker.key -out attacker.crt
 ```
 
-add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](#→-injecting-self-signed-token-via-x5c-header), we can sign using the private key and send the token with **`x5u`** header points to our jwk
+add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](#injecting-self-signed-token-via-x5c-header), we can sign using the private key and send the token with **`x5u`** header points to our jwk
 
 ### **Injecting self-signed JWTs via the `jku` parameter**
 
