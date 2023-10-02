@@ -1,0 +1,50 @@
+juba0x00:
+  name: Mahmoud Hawash
+  username: juba0x00
+  url: https://github.com/juba0x00/
+  avatar           : /assets/images/site_data/juba0x00.jpg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  bio              : "Jr.Penetration tester."
+  location         : "Tanta"
+  links:
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "mailto:juba0x00@gmail.com"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://juba0x00.ninja/"
+    - label: "Facebook"
+      icon: "fab fa-fw fa-facebook-square"
+      url: "https://facebook.com/juba0x00"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/juba0x00/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/juba0x00"
+
+
+0x41ly:
+  name: Aly Khaled
+  username: 0x41ly
+  url: https://github.com/0x41ly/
+  avatar           : /assets/images/site_data/0x41ly.jpeg # path of avatar image, e.g. "/assets/images/bio-photo.jpg"
+  bio              : "Jr.Penetration tester."
+  location         : "Tanta"
+  email            : 
+  links:
+    - label: "Email"
+      icon: "fas fa-fw fa-envelope-square"
+      url: "mailto:alykhaledxd@gmail.com"
+    - label: "Website"
+      icon: "fas fa-fw fa-link"
+      url: "https://0x41ly.github.io/"
+    - label: "Facebook"
+      icon: "fab fa-fw fa-facebook-square"
+      url: "https://www.facebook.com/aly.khal3d"
+    - label: "LinkedIn"
+      icon: "fab fa-fw fa-linkedin"
+      url: "https://www.linkedin.com/in/aly-khal3d/"
+    - label: "GitHub"
+      icon: "fab fa-fw fa-github"
+      url: "https://github.com/0x41ly"
+
