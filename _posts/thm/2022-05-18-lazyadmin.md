@@ -106,7 +106,6 @@ image:
 *   let’s try the exploit with /content/inc directory
 
     <img src="/assets/images/thm/LazyAdmin/Untitled 4.png" alt="Untitled" data-size="original">
-* download mysql backup in [http://10.10.244.50/content/inc/mysql\_backup/mysql\_bakup\_20191129023059-1.5.1.sql](http://10.10.244.50/content/inc/mysql\_backup/mysql\_bakup\_20191129023059-1.5.1.sql)
 *   backup content
 
     ```
