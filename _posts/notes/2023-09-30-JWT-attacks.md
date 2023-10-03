@@ -32,12 +32,12 @@ Unlike with classic session tokens, all of the data that a server needs is store
 - header identifies the hash algorithm used to generate the signature (base64url-encoded)
 - example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`  is the encoding of  `{ "alg" : "HS256", "typ" : "JWT" }`
 
-### →Payload
+### Payload
 
 The payload section contains information about the user’s identity. This section, too, is base64url encoded before being used in the token. Here’s an
 example of the payload section, which is the base64url-encoded string of `{ "username" : "admin" }`: `eyAidXNlcm5hbWUiIDogImFkbWluIn0`
 
-### →Signature
+### Signature
 
 The server that issues the token typically generates the signature by hashing the header and payload. In some cases, they also encrypt the resulting hash. Either way, this process involves a secret signing key. This mechanism provides a way for servers to verify that none of the data within the token has been tampered with since it was issued:
 
@@ -464,7 +464,7 @@ If the server receives a token signed using a symmetric algorithm like HS256, th
     
 3. **you may get the public key from a JavaScript script or from a mobile application**
 
-### →2.  **Convert the public key to a suitable format**
+### 2.  **Convert the public key to a suitable format**
 
 Although the server may expose its public key in JWK format, when verifying the signature of a token, it will use its own copy of the key from its local filesystem or database. This may be stored in a different format.
 
