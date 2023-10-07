@@ -10,7 +10,7 @@ tags: [jwt, jwt-attacks, authentication, authorization]
 toc: true
 ---
 
-# [go to attacks, Skip Introduction](#accepting-arbitrary-signatures-does-not-verify-the-signature)
+## [go to attacks, Skip Introduction](#accepting-arbitrary-signatures-does-not-verify-the-signature)
 
 - **Sources, Credits:**
     - [PortSwigger](https://portswigger.net/web-security/jwt)
@@ -19,25 +19,25 @@ toc: true
 
 ---
 
-# What is JSON Web Tokens (JWT)
+## What is JSON Web Tokens (JWT)
 
 JSON web tokens (JWTs) are a standardized format for sending cryptographically signed JSON data between systems. They can theoretically contain any kind of data but are most commonly used to send information ("claims") about users as part of authentication, session handling, and access control mechanisms.
 
 Unlike with classic session tokens, all of the data that a server needs is stored client-side within the JWT itself. This makes JWTs a popular choice for highly distributed websites where users need to interact seamlessly with multiple back-end servers.
 
-## JWT format Header.Payload.Signature
+### JWT format Header.Payload.Signature
 
-### Header
+#### Header
 
 - header identifies the hash algorithm used to generate the signature (base64url-encoded)
 - example: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`  is the encoding of  `{ "alg" : "HS256", "typ" : "JWT" }`
 
-### Payload
+#### Payload
 
 The payload section contains information about the user’s identity. This section, too, is base64url encoded before being used in the token. Here’s an
 example of the payload section, which is the base64url-encoded string of `{ "username" : "admin" }`: `eyAidXNlcm5hbWUiIDogImFkbWluIn0`
 
-### Signature
+#### Signature
 
 The server that issues the token typically generates the signature by hashing the header and payload. In some cases, they also encrypt the resulting hash. Either way, this process involves a secret signing key. This mechanism provides a way for servers to verify that none of the data within the token has been tampered with since it was issued:
 
@@ -46,7 +46,7 @@ The server that issues the token typically generates the signature by hashing th
 
 the signature section validates that the user hasn’t tampered with the token. It’s calculated by concatenating the header with the payload, then signing it with the algorithm specified in the header, and a **secret key**. Here’s what a JWT signature looks like `4Hb/6ibbViPOzq9SJflsNGPWSk6B8F6EqVrkNjpXh7M`
 
-## JWT Example
+### JWT Example
 
  **Header.Payload.Signature**
 
@@ -54,7 +54,7 @@ the signature section validates that the user hasn’t tampered with the token. 
 
 ---
 
-# **JWT vs. JWS vs. JWE**
+## **JWT vs. JWS vs. JWE**
 
 The JWT specification is actually very limited. It only defines a format for representing information ("claims") as a JSON object that can be transferred between two parties. In practice, JWTs aren't really used as a standalone entity. The JWT spec is extended by both the JSON Web Signature (JWS) and JSON Web Encryption (JWE) specifications, which define concrete ways of actually implementing JWTs.
 
@@ -69,19 +69,19 @@ In other words, a JWT is usually either a JWS or JWE token. When people use the 
 
 ---
 
-# What are JWT attacks
+## What are JWT attacks
 
 JWT attacks refer to sending altered JWTs to a server with the intent of bypassing authentication and accessing controls by impersonating an already authenticated user.
 
 ---
 
-# **What is the impact of JWT attacks?**
+## **What is the impact of JWT attacks?**
 
 JWT attacks can have severe consequences, as attackers who can generate valid tokens with custom values can potentially elevate their privileges or impersonate other users, taking full control over their accounts.
 
 ---
 
-# **How do vulnerabilities to JWT attacks arise?**
+## **How do vulnerabilities to JWT attacks arise?**
 
 JWT vulnerabilities typically arise due to flawed JWT handling within the application itself. The [various specifications](https://portswigger.net/web-security/jwt#jwt-vs-jws-vs-jwe) related to JWTs are relatively flexible by design, allowing website developers to decide on many implementation details for themselves. This can result in them accidentally introducing vulnerabilities even when using battle-hardened libraries.
 
@@ -89,15 +89,15 @@ These implementation flaws usually mean that the signature of the JWT is not ver
 
 ---
 
-# Attacks
+## Attacks
 
-## Accepting arbitrary signatures (Does not verify the signature)
+### Accepting arbitrary signatures (Does not verify the signature)
 
 JWT libraries typically provide one method for verifying tokens and another that just decodes them. For example, the Node.js library `jsonwebtoken` has `verify()` and `decode()`.
 
 Occasionally, developers confuse these two methods and only pass incoming tokens to the `decode()` method. This effectively means that the application doesn't verify the signature at all.
 
-## **Accepting tokens with no signature (`"alg": "none"`)**
+### **Accepting tokens with no signature (`"alg": "none"`)**
 
 JWTs can be signed using various algorithms, but can also be left unsigned. In this case, the `alg` parameter is set to `none`, which indicates a so-called "unsecured JWT". Due to the obvious dangers of this, servers usually reject tokens with no signature. However, as this kind of filtering relies on string parsing, you can sometimes bypass these filters using classic obfuscation techniques, such as mixed capitalization and unexpected encodings.
 
@@ -123,7 +123,7 @@ This is inherently flawed because the server has no option but to implicitly tru
 
 </aside>
 
-## **Brute-forcing secret keys**
+### **Brute-forcing secret keys**
 
 Some signing algorithms, such as HS256 (HMAC + SHA-256), use an arbitrary, standalone string as the secret key. Just like a password, it's crucial that this secret can't be easily guessed or brute-forced by an attacker. Otherwise, they may be able to create JWTs with any header and payload values they like, and then use the key to re-sign the token with a valid signature.
 
@@ -179,7 +179,7 @@ If an attacker is not able to brute-force the key, they might try leaking the se
     ```
     
 
-## **JWT header parameter injections**
+### **JWT header parameter injections**
 
 According to the JWS specification, only the `alg` header parameter is mandatory. In practice, however, JWT headers (also known as JOSE headers) often contain several other parameters. The following ones are of particular interest to attackers.
 
@@ -189,7 +189,7 @@ According to the JWS specification, only the `alg` header parameter is mandato
 
 As you can see, these user-controllable parameters each tell the recipient server which key to use when verifying the signature. In this section, you'll learn how to exploit these to inject modified JWTs signed using your own arbitrary key rather than the server's secret.
 
-### **Injecting self-signed JWTs via the `jwk` parameter**
+#### **Injecting self-signed JWTs via the `jwk` parameter**
 
 The JSON Web Signature (JWS) specification describes an optional `jwk` header parameter, which servers can use to embed their **public key** directly within the token itself in JWK format.
 
@@ -225,7 +225,7 @@ Ideally, servers should only use a limited whitelist of public keys to verify JW
 
 You can exploit this behavior by signing a modified JWT using your own RSA private key, and then embedding the matching public key in the `jwk` header.
 
-### injecting self-signed token via `x5c` header
+#### injecting self-signed token via `x5c` header
 
 `x5c` attribute (X.509 URL) is a header point to an `X.509` public key certificate that can be used to validate the signature
 
@@ -242,7 +242,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout attacker.key -out at
 
 add the certificate content on a `jwk` respecting the format mentioned in [x5c attribute in JWK is just a certificate with the following format:](#injecting-self-signed-token-via-x5c-header), we can sign using the private key and send the token with **`x5u`** header points to our jwk
 
-### **Injecting self-signed JWTs via the `jku` parameter**
+#### **Injecting self-signed JWTs via the `jku` parameter**
 
 some servers let you use the `jku` (JWK Set URL) header parameter to reference a JWK Set containing the key. When verifying the signature, the server fetches the relevant key from this URL.
 
@@ -286,7 +286,7 @@ More secure websites will only fetch keys from trusted domains, but you can some
     - replace the `kid` in the JWT to match the generated key `kid`
     - add `jku`  with the file link
 
-### Bypass restricted `jku` parameter using Open Redirect
+#### Bypass restricted `jku` parameter using Open Redirect
 
 - if the application does not accept `jku` set to other hosts, and there is an endpoint vulnerable to open redirect, we can use an **Open Redirect** vulnerability to get our JWK file used and bypass the restriction (since our malicious URL will start with the URL of the vulnerable application).
 - example:
@@ -295,7 +295,7 @@ More secure websites will only fetch keys from trusted domains, but you can some
     - we can use directory traversal if the server checks `.well-known`:  `https://vulnerable.com/.well-known/jwks.json/../../redirect?uri=**http://attacker.host/.well-known/jwks.json`**
 - now we can sign the token using our generated key and make the server verify it using our jwk
 
-### Bypass restricted `jku` parameter using HTTP response splitting
+#### Bypass restricted `jku` parameter using HTTP response splitting
 
 we can use HTTP response splitting vulnerability to bypass `jku` restrictions, like the following
 
@@ -315,7 +315,7 @@ we can use this vulnerable endpoint in `jku` to return our JWK and the server ve
 "jku": "http://vulnerable.com/.well-known/../debug?value=1337%0d%0aContent-Length:%2043%0d%0a%0d%0a%7B%22keys%22:%5B%7B%22kty%22:%22RSA%22,%22use%22:%22sig%22,%22e%22:%22AQAB%22,%22kid%22:%22pentesterlab%22,%22n%22:%22qGkM2xNc2T1hXccAM5cTtW73hbV350hVjt0O2EF-0SA8dryPuKUcijGsMtFt8Ny5OdKAYao5QBqeA0PV_QfrlO06YUW4tRYb24IeQVKIjuYCOg92BZRTNex-wlKEUv16Daku1AN63FB_z3N_NXPpquG5n6Dtr9zaBZ7agSe1RHaPs5MTrJAiFHdz6AtpZ8MJldnbdf0PJ0NY7nvUyvut1BLKVcd5ikkCxY-bkXDHKcxHKktm7_2SGIXyU06-WxY9gsrWRpaqSnubPz8M0OfPPgrRKEEo4Z7flRh-dcoVhH94ZroGUe0rqbo7WctgSBAIloVOqx9REnB8BXjc-oMgTw%22,%22alg%22:%22RS256%22%7D%5D%7D"
 ```
 
-### **Injecting self-signed JWTs via the `kid` parameter**
+#### **Injecting self-signed JWTs via the `kid` parameter**
 
 Servers may use several cryptographic keys for signing different kinds of data, not just JWTs. For this reason, the header of a JWT may contain a `kid` (Key ID) parameter, which helps the server identify which key to use when verifying the signature.
 
@@ -343,7 +343,7 @@ You could theoretically do this with any file, but one of the simplest methods i
 
 If the server stores its verification keys in a database, the `kid` header parameter is also a potential vector for [SQL injection](https://portswigger.net/web-security/sql-injection) attacks.
 
-### **`CVE-2017-17405` in Ruby `Net::FTP`: Command injection in `kid` parameter**
+#### **`CVE-2017-17405` in Ruby `Net::FTP`: Command injection in `kid` parameter**
 
 - Ruby has to ways to open a file:
     - `File.open`
@@ -354,7 +354,7 @@ If the server stores its verification keys in a database, the `kid` header par
     
 - **Since the signature is checked after the vulnerability is exploited, you don't need to provide a valid signature in this exercise.**
 
-### SQLi in `kid` parameter
+#### SQLi in `kid` parameter
 
 - Often used to retrieve a key from:
     - file system
@@ -385,9 +385,9 @@ If the server stores its verification keys in a database, the `kid` header par
     - `kid = any_key_does_not_exist' UNION SELECT 'my_secret`
 - Now we can sign a new tampered token and it will be verified successfully on the server.
 
-## Algorithm confusion attacks Introduction
+### Algorithm confusion attacks Introduction
 
-### **Symmetric vs. asymmetric algorithms**
+#### **Symmetric vs. asymmetric algorithms**
 
 JWTs can be signed using a range of different algorithms. Some of these, such as HS256 (HMAC + SHA-256) use a "symmetric" key. This means that the server uses a single key to both sign and verify the token. Clearly, this needs to be kept secret, just like a password.
 
@@ -403,7 +403,7 @@ As the names suggest, the private key must be kept secret, but the public key is
 - Now let’s say that an application was originally designed to use RSA tokens. The tokens are signed with a private key A, which is kept a secret from the public. Then the tokens are verified with public key B, which is available to anyone. This is okay as long as the tokens are always treated as RSA tokens. Now if the attacker changes the alg field to HMAC, they might be able to create valid tokens by signing the forged tokens with the RSA public key, B. When the signing algorithm is switched to HMAC, the token is still verified with the RSA public key B, but this time, the token can be signed with the same public key too.
 - Notice that we can’t get the private key from the public key, however, we can get the public key from the private key
 
-### **How do algorithm confusion vulnerabilities arise?**
+#### **How do algorithm confusion vulnerabilities arise?**
 
 Algorithm confusion vulnerabilities typically arise due to flawed implementation of JWT libraries. Although the actual verification process differs depending on the algorithm used, many libraries provide a single, algorithm-agnostic method for verifying signatures. These methods rely on the `alg` parameter in the token's header to determine the type of verification they should perform.
 
@@ -435,9 +435,9 @@ If the server receives a token signed using a symmetric algorithm like HS256, th
 
 </aside>
 
-## Performing algorithm confusion attacks
+### Performing algorithm confusion attacks
 
-### 1. Obtain the server’s public key
+#### 1. Obtain the server’s public key
 
 1. **Servers sometimes expose their public keys as JSON Web Key (JWK) objects via a standard endpoint mapped to `/jwks.json` or `/.well-known/jwks.json`, for example. These may be stored in an array of JWKs called `keys`. This is known as a JWK Set.**
 2. **Even if the key isn't exposed publicly, you may be able to [extract it from a pair of existing JWTs](https://portswigger.net/web-security/jwt/algorithm-confusion#deriving-public-keys-from-existing-tokens).**
@@ -464,7 +464,7 @@ If the server receives a token signed using a symmetric algorithm like HS256, th
     
 3. **you may get the public key from a JavaScript script or from a mobile application**
 
-### 2.  **Convert the public key to a suitable format**
+#### 2.  **Convert the public key to a suitable format**
 
 Although the server may expose its public key in JWK format, when verifying the signature of a token, it will use its own copy of the key from its local filesystem or database. This may be stored in a different format.
 
@@ -482,15 +482,15 @@ For the purpose of this example, let's assume that we need the key in X.509 PEM 
 8. Replace the generated value for the `kid` parameter with the original token `kid`, so the server can verify it 
 9. Save the key.
 
-### **3. Modify your JWT**
+#### **3. Modify your JWT**
 
 Once you have the public key in a suitable format, you can [modify the JWT](https://portswigger.net/web-security/jwt/working-with-jwts-in-burp-suite#editing-the-contents-of-jwts) however you like. Just make sure that the `alg` header is set to `HS256`.
 
-### **4. Sign the JWT using the public key**
+#### **4. Sign the JWT using the public key**
 
 [Sign the token](https://portswigger.net/web-security/jwt/working-with-jwts-in-burp-suite#signing-jwts) using the HS256 algorithm with the RSA public key as the secret.
 
-### Tools
+#### Tools
 
 - https://github.com/ticarpi/jwt_tool is a very powerful tool
     
@@ -531,7 +531,7 @@ Once you have the public key in a suitable format, you can [modify the JWT](htt
     ```
     
 
-### Another algorithm confusion example (ECDSA to HS256)
+#### Another algorithm confusion example (ECDSA to HS256)
 
 In practice, you can change the algorithm used by the application (ECDSA - **ES256**) to tell it to use HMAC (**HS256**).
 The application will call the method **verify** when you send the cookie. Since the code is written to use ECDSA, it will call **verify(public_key, data)**.
@@ -581,7 +581,7 @@ for key in keys:
 
 - the script will print the possible public keys and tampered tokens, try tokens to know the valid key
 
-## **CVE-2022-21449 Bypass ECDSA  signature (Java 15/16/17/18)**
+### **CVE-2022-21449 Bypass ECDSA  signature (Java 15/16/17/18)**
 
 To exploit this vulnerability, you will need to forge a signature with both `r` and `s` equal to 0. To do this, you will need to look at JWT libraries in your favorite language that supports Elliptic Curve and see how they encode `r` and `s` as part of the signature
 
@@ -603,7 +603,7 @@ we can use this signature to bypass signature verification
 
 ---
 
-# **How to prevent JWT attacks**
+## **How to prevent JWT attacks**
 
 You can protect your own websites against many of the attacks we've covered by taking the following high-level measures:
 
@@ -612,7 +612,7 @@ You can protect your own websites against many of the attacks we've covered by t
 - Enforce a strict whitelist of permitted hosts for the `jku` header.
 - Make sure that you're not vulnerable to [path traversal](https://portswigger.net/web-security/file-path-traversal) or SQL injection via the `kid` header parameter.
 
-## **Additional best practice for JWT handling**
+### **Additional best practice for JWT handling**
 
 Although not strictly necessary to avoid introducing vulnerabilities, we recommend adhering to the following best practice when using JWTs in your applications:
 
