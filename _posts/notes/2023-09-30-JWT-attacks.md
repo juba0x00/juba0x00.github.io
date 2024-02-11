@@ -10,6 +10,7 @@ tags: [jwt, jwt-attacks, authentication, authorization]
 toc: true
 ---
 
+
 ## [go to attacks, Skip Introduction](#accepting-arbitrary-signatures-does-not-verify-the-signature)
 
 - **Sources, Credits:**
